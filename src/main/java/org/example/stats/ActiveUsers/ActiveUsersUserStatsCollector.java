@@ -1,8 +1,7 @@
-package org.example.stats;
+package org.example.stats.ActiveUsers;
 
 import org.example.models.User.User;
 import org.example.models.User.UserActivity;
-import org.example.stats.ActiveUsers.ActiveUsersStatsResult;
 
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
