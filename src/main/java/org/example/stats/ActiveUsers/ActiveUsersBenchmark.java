@@ -2,9 +2,8 @@ package org.example.stats.ActiveUsers;
 
 import org.example.models.User.User;
 import org.example.models.User.UserGenerator;
-import org.example.stats.ActiveUsers.ActiveUsersStatsGenerator;
 import org.openjdk.jmh.annotations.*;
-        import org.openjdk.jmh.infra.Blackhole;
+import org.openjdk.jmh.infra.Blackhole;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -24,43 +23,33 @@ public class ActiveUsersBenchmark {
     public int delayPerUserMs;
 
     private List<User> users;
-    private long totalDelayMs;
 
     @Setup
     public void setup() {
         users = UserGenerator.generateUsers(userCount);
-        totalDelayMs = (long) userCount * delayPerUserMs;
-    }
-
-    private void simulateDbDelay() {
-        if (totalDelayMs > 0) {
-            try {
-                Thread.sleep(totalDelayMs);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
     }
 
     @Benchmark
     public void stream(Blackhole bh) {
-        simulateDbDelay();
-        long result = ActiveUsersStatsGenerator.countActiveWithStream(users);
+        long result = ActiveUsersStatsGenerator.countActiveWithStream(users, delayPerUserMs);
         bh.consume(result);
     }
 
     @Benchmark
     public void parallelStream(Blackhole bh) {
-        simulateDbDelay();
-        long result = ActiveUsersStatsGenerator.countActiveWithParallelStream(users);
+        long result = ActiveUsersStatsGenerator.countActiveWithParallelStream(users, delayPerUserMs);
         bh.consume(result);
     }
 
-    // Добавьте, если используете кастомный коллектор
     @Benchmark
-    public void parallelCustom(Blackhole bh) {
-        simulateDbDelay();
-        long result = ActiveUsersStatsGenerator.countActiveWithParallelCustomCollector(users);
+    public void customCollector(Blackhole bh) {
+        long result = ActiveUsersStatsGenerator.countActiveWithCustomCollector(users, delayPerUserMs);
+        bh.consume(result);
+    }
+
+    @Benchmark
+    public void parallelCustomCollector(Blackhole bh) {
+        long result = ActiveUsersStatsGenerator.countActiveWithParallelCustomCollector(users, delayPerUserMs);
         bh.consume(result);
     }
 }
