@@ -1,4 +1,4 @@
-package org.example.stats.ActiveUsers;
+package org.example.stats;
 
 import org.example.models.User.User;
 import org.example.models.User.UserActivity;
