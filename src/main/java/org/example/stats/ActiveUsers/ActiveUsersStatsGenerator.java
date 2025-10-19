@@ -3,6 +3,7 @@ package org.example.stats.ActiveUsers;
 import org.example.models.User.User;
 import org.example.models.User.UserActivity;
 import java.util.List;
+import java.util.stream.StreamSupport;
 
 //Статистика по активным пользователям
 public class ActiveUsersStatsGenerator {
@@ -42,6 +43,15 @@ public class ActiveUsersStatsGenerator {
                 .activeUsers;
     }
 
+    public static long countActiveWithCustomSpliterator(List<User> users, long delayMs) {
+        simulateDelay(delayMs);
+        return StreamSupport.stream(
+                        new ActiveUsersSpliterator(users, 0, users.size()),
+                        true
+                ).mapToLong(u -> u.getUserActivity() == UserActivity.ACTIVE ? 1L : 0L)
+                .sum();
+    }
+
     // Вспомогательный метод для имитации задержки (в миллисекундах)
     private static void simulateDelay(long delayMs) {
         if (delayMs <= 0) return;
@@ -52,7 +62,6 @@ public class ActiveUsersStatsGenerator {
             Thread.currentThread().interrupt(); // восстанавливаем статус прерывания
         }
     }
-
 }
 
 

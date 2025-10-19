@@ -20,4 +20,5 @@ Result "org.example.stats.ActiveUsers.ActiveUsersBenchmark.parallelCustom":
 
 число avg и есть итоговое время выполнения метода
 
-
+Результаты:
+https://docs.google.com/spreadsheets/d/1YQtn9SlXpid_3mdb-ljrFWvucT7zg3RhqUgDLJdb3ag/edit?gid=0#gid=0

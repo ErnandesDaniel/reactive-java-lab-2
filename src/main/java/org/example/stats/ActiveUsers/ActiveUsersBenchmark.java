@@ -16,11 +16,11 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 3, time = 1)
 public class ActiveUsersBenchmark {
 
-    @Param({"5000", "50000", "250000"})
+    @Param({"3000","5000", "50000", "250000"})
     public int userCount;
 
-    @Param({"0", "1"}) // 0 = без задержки, 1 = 1 мс на пользователя (имитация БД)
-    public int delayPerUserMs;
+    @Param({"0", "2"})
+    public int delayOperation;
 
     private List<User> users;
 
@@ -31,25 +31,32 @@ public class ActiveUsersBenchmark {
 
     @Benchmark
     public void stream(Blackhole bh) {
-        long result = ActiveUsersStatsGenerator.countActiveWithStream(users, delayPerUserMs);
+        long result = ActiveUsersStatsGenerator.countActiveWithStream(users, delayOperation);
         bh.consume(result);
     }
 
-//    @Benchmark
-//    public void parallelStream(Blackhole bh) {
-//        long result = ActiveUsersStatsGenerator.countActiveWithParallelStream(users, delayPerUserMs);
-//        bh.consume(result);
-//    }
-//
-//    @Benchmark
-//    public void customCollector(Blackhole bh) {
-//        long result = ActiveUsersStatsGenerator.countActiveWithCustomCollector(users, delayPerUserMs);
-//        bh.consume(result);
-//    }
-//
-//    @Benchmark
-//    public void parallelCustomCollector(Blackhole bh) {
-//        long result = ActiveUsersStatsGenerator.countActiveWithParallelCustomCollector(users, delayPerUserMs);
-//        bh.consume(result);
-//    }
+    @Benchmark
+    public void parallelStream(Blackhole bh) {
+        long result = ActiveUsersStatsGenerator.countActiveWithParallelStream(users, delayOperation);
+        bh.consume(result);
+    }
+
+    @Benchmark
+    public void customCollector(Blackhole bh) {
+        long result = ActiveUsersStatsGenerator.countActiveWithCustomCollector(users, delayOperation);
+        bh.consume(result);
+    }
+
+    @Benchmark
+    public void parallelCustomCollector(Blackhole bh) {
+        long result = ActiveUsersStatsGenerator.countActiveWithParallelCustomCollector(users, delayOperation);
+        bh.consume(result);
+    }
+
+    @Benchmark
+    public void customSpliterator(Blackhole bh) {
+        long result = ActiveUsersStatsGenerator.countActiveWithCustomSpliterator(users, delayOperation);
+        bh.consume(result);
+    }
+
 }
