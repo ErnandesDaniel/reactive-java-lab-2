@@ -35,21 +35,21 @@ public class ActiveUsersBenchmark {
         bh.consume(result);
     }
 
-    @Benchmark
-    public void parallelStream(Blackhole bh) {
-        long result = ActiveUsersStatsGenerator.countActiveWithParallelStream(users, delayPerUserMs);
-        bh.consume(result);
-    }
-
-    @Benchmark
-    public void customCollector(Blackhole bh) {
-        long result = ActiveUsersStatsGenerator.countActiveWithCustomCollector(users, delayPerUserMs);
-        bh.consume(result);
-    }
-
-    @Benchmark
-    public void parallelCustomCollector(Blackhole bh) {
-        long result = ActiveUsersStatsGenerator.countActiveWithParallelCustomCollector(users, delayPerUserMs);
-        bh.consume(result);
-    }
+//    @Benchmark
+//    public void parallelStream(Blackhole bh) {
+//        long result = ActiveUsersStatsGenerator.countActiveWithParallelStream(users, delayPerUserMs);
+//        bh.consume(result);
+//    }
+//
+//    @Benchmark
+//    public void customCollector(Blackhole bh) {
+//        long result = ActiveUsersStatsGenerator.countActiveWithCustomCollector(users, delayPerUserMs);
+//        bh.consume(result);
+//    }
+//
+//    @Benchmark
+//    public void parallelCustomCollector(Blackhole bh) {
+//        long result = ActiveUsersStatsGenerator.countActiveWithParallelCustomCollector(users, delayPerUserMs);
+//        bh.consume(result);
+//    }
 }
