@@ -22,3 +22,16 @@ Result "org.example.stats.ActiveUsers.ActiveUsersBenchmark.parallelCustom":
 
 Результаты:
 https://docs.google.com/spreadsheets/d/1YQtn9SlXpid_3mdb-ljrFWvucT7zg3RhqUgDLJdb3ag/edit?gid=0#gid=0
+
+
+
+проверить виртуальные потоки работают ли на этой jvm
+
+добавить ссылку на документацию
+
+
+сделать для двух статистик код
+
+
+Project Loom проверить
+
