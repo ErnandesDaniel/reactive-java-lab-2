@@ -11,9 +11,9 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
-@Fork(value = 2)
-@Warmup(iterations = 3)
-@Measurement(iterations = 5)
+@Fork(value = 1)
+@Warmup(iterations = 2, time = 1)
+@Measurement(iterations = 3, time = 1)
 public class ActiveUsersBenchmark {
 
 //    @Param({"3000","5000", "50000", "250000"})
