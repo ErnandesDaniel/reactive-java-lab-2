@@ -3,67 +3,53 @@ package org.example.stats.ActiveUsers;
 import org.example.models.User.User;
 import org.example.models.User.UserActivity;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.Spliterator;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
-import java.util.concurrent.locks.LockSupport;
 
 //Статистика по активным пользователям
 public class ActiveUsersStatsGenerator {
 
+    // Защита от JIT-оптимизации
+    public static volatile long SINK;
 
-    // Последовательная обработка (в одном виртуальном потоке)
+    // Вспомогательный метод для имитации задержки (в микросекундах)
+    private static void simulateDelayMicros(long delayMicros) {
+        if (delayMicros <= 0) return;
+        long delayNanos = delayMicros * 1_000L;
+        long start = System.nanoTime();
+        long counter = 0;
+        while (System.nanoTime() - start < delayNanos) {
+            counter++;
+        }
+        SINK = counter;
+    }
+
+    //Обработка пользователя с задержкой
+    private static long processUserWithDelay(User u, long delayMicros) {
+        simulateDelayMicros(delayMicros);
+        return u.getUserActivity() == UserActivity.ACTIVE ? 1L : 0L;
+    }
+
+    // Единый вспомогательный метод работы с потоками
+    private static long countActiveFromStream(Stream<User> stream, long delayMicros) {
+        return stream
+                .mapToLong(u -> processUserWithDelay(u, delayMicros))
+                .sum();
+    }
+
+    // Stream API с одним потоком
     public static long countActiveWithOneStream(List<User> users, long delayMicros) {
-
-        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
-            CompletableFuture<Long> result = CompletableFuture.supplyAsync(() -> {
-                long count = 0;
-                for (User user : users) {
-                    simulateIoDelayMicros(delayMicros);
-                    if (user.getUserActivity() == UserActivity.ACTIVE) {
-                        count++;
-                    }
-                }
-                return count;
-            }, executor);
-            return result.join();
-        }
+        return countActiveFromStream(users.stream(), delayMicros);
     }
 
-    // Параллельная обработка (по одному виртуальному потоку на пользователя)
+    // Stream API с параллельными потоками
     public static long countActiveWithParallelStreams(List<User> users, long delayMicros) {
-
-        try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
-            return users.stream()
-                    .map(user -> CompletableFuture.supplyAsync(() -> {
-                        simulateIoDelayMicros(delayMicros);
-                        return user.getUserActivity() == UserActivity.ACTIVE ? 1L : 0L;
-                    }, executor))
-                    .mapToLong(CompletableFuture::join)
-                    .sum();
-        }
+        return countActiveFromStream(users.parallelStream(), delayMicros);
     }
 
-//    public static long countActiveWithCustomSpliterator(List<User> users, long delayMicros) {
-//        return StreamSupport.stream(
-//                        new ActiveUsersSpliterator(users, 0, users.size(), delayMicros),
-//                        true
-//                ).mapToLong(u -> u.getUserActivity() == UserActivity.ACTIVE ? 1L : 0L)
-//                .sum();
-//    }
-
-    //Имитация неблокирующей I/O задержки в микросекундах
-    private static void simulateIoDelayMicros(long delayMicros) {
-        if (delayMicros > 0) {
-            // parkNanos корректно работает с виртуальными потоками
-            LockSupport.parkNanos(delayMicros * 1_000L);
-        }
+    public static long countActiveWithCustomSpliterator(List<User> users, long delayMicros) {
+        Spliterator.OfLong spliterator = new ActiveUsersSpliterator(users, 0, users.size(), delayMicros);
+        return StreamSupport.longStream(spliterator, true).sum();
     }
-
 }
-
-
-
-

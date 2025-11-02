@@ -11,9 +11,9 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @State(Scope.Benchmark)
-@Fork(value = 1)
-@Warmup(iterations = 2, time = 1)
-@Measurement(iterations = 3, time = 1)
+@Fork(value = 2)
+@Warmup(iterations = 3)
+@Measurement(iterations = 5)
 public class ActiveUsersBenchmark {
 
 //    @Param({"3000","5000", "50000", "250000"})
@@ -23,7 +23,7 @@ public class ActiveUsersBenchmark {
     public int userCount;
 
     @Param({"0", "2"})
-    public int delayOperation;
+    public int delayMicros;
 
     private List<User> users;
 
@@ -34,20 +34,20 @@ public class ActiveUsersBenchmark {
 
     @Benchmark
     public void oneStream(Blackhole bh) {
-        long result = ActiveUsersStatsGenerator.countActiveWithOneStream(users, delayOperation);
+        long result = ActiveUsersStatsGenerator.countActiveWithOneStream(users, delayMicros);
         bh.consume(result);
     }
 
     @Benchmark
     public void parallelStreams(Blackhole bh) {
-        long result = ActiveUsersStatsGenerator.countActiveWithParallelStreams(users, delayOperation);
+        long result = ActiveUsersStatsGenerator.countActiveWithParallelStreams(users, delayMicros);
         bh.consume(result);
     }
 
-//    @Benchmark
-//    public void customSpliterator(Blackhole bh) {
-//        long result = ActiveUsersStatsGenerator.countActiveWithCustomSpliterator(users, delayOperation);
-//        bh.consume(result);
-//    }
+    @Benchmark
+    public void customSpliterator(Blackhole bh) {
+        long result = ActiveUsersStatsGenerator.countActiveWithCustomSpliterator(users, delayMicros);
+        bh.consume(result);
+    }
 
 }
