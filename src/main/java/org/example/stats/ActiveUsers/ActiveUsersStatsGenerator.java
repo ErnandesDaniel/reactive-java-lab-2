@@ -7,7 +7,7 @@ import java.util.Spliterator;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-//Статистика по активным пользователям
+//Статистика по активным пользователям - возвращает число активных пользователей
 public class ActiveUsersStatsGenerator {
 
     // Защита от JIT-оптимизации
