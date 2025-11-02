@@ -16,11 +16,11 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 3, time = 1)
 public class ActiveUsersBenchmark {
 
-//    @Param({"3000","5000", "50000", "250000"})
-//    public int userCount;
-
-    @Param({"3000", "5000"})
+    @Param({"3000","5000", "50000", "250000"})
     public int userCount;
+
+//    @Param({"3000", "5000"})
+//    public int userCount;
 
     @Param({"0", "2"})
     public int delayMicros;
