@@ -20,8 +20,13 @@ Result "org.example.stats.ActiveUsers.ActiveUsersBenchmark.parallelCustom":
 
 число avg и есть итоговое время выполнения метода
 
-Результаты:
-https://docs.google.com/spreadsheets/d/1YQtn9SlXpid_3mdb-ljrFWvucT7zg3RhqUgDLJdb3ag/edit?gid=0#gid=0
+Результаты Excel документ:
+https://docs.google.com/spreadsheets/d/1imdJPpFDb5hwETZKoSwlUUiGOF_ZJij4P0Ht8Ruw_O4/edit?gid=0#gid=0
+
+Результаты Word документ:
+https://docs.google.com/document/d/1nJR5dc4T3RiV-EKLPeNuB_OJ9b1z2JGaPcGIfTvQgLg/edit?tab=t.0
+
+
 
 сделать для двух статистик код
 
